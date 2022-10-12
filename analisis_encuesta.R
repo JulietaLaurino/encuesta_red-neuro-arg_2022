@@ -198,7 +198,7 @@ demografia <- c('Timestamp',
 # Gráficos----
 
 posicion_n <- data %>% count(posicion)
-img <- image_read("logo.png")
+img <- image_read("../logo.png")
 
 ## Genero
 p_genero <- data %>%
@@ -564,7 +564,7 @@ for(instancia in instancias){
   
   names(this_sentimientos_df) <- c('enfado', 'anticipación',	'disgusto',	'miedo',	'alegría',	'tristeza',	'sorpresa',	'confianza',	'negativo',	'positivo')
   
-  this_sentimientos_df <- prop.table(this_sentimientos_df) 
+  #this_sentimientos_df <- prop.table(this_sentimientos_df) 
   this_sentimientos_df$word = texto_palabras
   this_sentimientos_df <- this_sentimientos_df %>% 
     pivot_longer(names_to = 'emocion', values_to = 'valor', cols = -word)
@@ -627,7 +627,7 @@ sentimientos_df_plot
 ggsave('./figuras/emociones_frecuentes.png', width = 2.5, height = 2)
 
 # Grafico valor de cada variable emocional
-ggplot(sentimientos_df, aes(emocion, valor, fill = dimension)) +
+sentimientos_plot <- ggplot(sentimientos_df, aes(emocion, valor, fill = dimension)) +
   geom_bar(position = "dodge", stat = "summary", fun = mean) +
   stat_summary(
     fun.data = mean_se,
@@ -638,10 +638,16 @@ ggplot(sentimientos_df, aes(emocion, valor, fill = dimension)) +
   ) +
   theme_classic(base_size = 6) +
   scale_fill_manual(values = brewer.pal(3,"Dark2"))+
-  theme(legend.position = 'none')
+  theme(legend.position = 'none',
+        plot.margin = margin(1, 1.5, 1, 1.5, "cm")) +
+  ylab('valor emocional')
 
-ggsave('./figuras/sentiment_analysis.png', height = 2,
-       width = 2)
+ggdraw() +
+  draw_plot(sentimientos_plot)+
+  draw_image(img,x = 0.83, y = 0.8, width = 0.18, height = 0.18) 
+
+ggsave('./figuras/sentiment_analysis.png', height = 3,
+       width = 3.5)
 
 ## Grafico valor de cada variable emocional por posición
 ggplot(sentimientos_df, aes(emocion, valor, fill = dimension)) +
@@ -657,7 +663,7 @@ ggplot(sentimientos_df, aes(emocion, valor, fill = dimension)) +
   theme_classic(base_size = 6) +
   theme(legend.position = 'none') +
   scale_fill_manual(values = brewer.pal(3,"Dark2"))+
-  facet_wrap(~posicion, nrow=3, scales = 'free')
+  facet_wrap(~posicion, nrow=3, scales = 'free') +ylab('valor emocional')
 
 ggsave('./figuras/sentiment_analysis_por_instancia.png', height = 4,
        width = 2)
