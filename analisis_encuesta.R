@@ -528,6 +528,7 @@ ggsave('./figuras/alternativas.png', width = 7, height = 5)
 
 # Redes----
 
+translation <- read.csv('./translated.csv', sep = ";")
 data_redes <- data %>% 
   select(all_of(c(demografia, redes))) 
 
@@ -607,7 +608,8 @@ sentimientos_df_count <- sentimientos_df %>%
                    valor = max(valor),
                    .groups = "drop") %>% 
   distinct(word, .keep_all = TRUE) %>% 
-  mutate(valor_total = n*valor)
+  mutate(valor_total = n*valor) %>% 
+  left_join(translation)
 
 sentimientos_df_plot <- sentimientos_df_count %>% 
   slice_max(valor_total, n = 50) %>%
