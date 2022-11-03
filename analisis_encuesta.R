@@ -198,7 +198,7 @@ demografia <- c('Timestamp',
 # Gráficos----
 
 posicion_n <- data %>% count(posicion)
-img <- image_read("../logo.png")
+img <- image_read("./logo.png")
 
 ## Genero
 p_genero <- data %>%
